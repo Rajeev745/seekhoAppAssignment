@@ -5,4 +5,6 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="retry">Retry</string>
     <string name="episode_count">Episode: %1$s</string>
+    <string name="label_genre">Genre: %1$s</string>
+    <string name="label_rating">Ratings: %1$s</string>
 </resources>

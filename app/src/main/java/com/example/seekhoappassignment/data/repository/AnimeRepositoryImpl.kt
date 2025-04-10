@@ -4,6 +4,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.example.seekhoappassignment.data.anime_paging_source.AnimePagingSource
 import com.example.seekhoappassignment.data.remote.AnimeApiService
+import com.example.seekhoappassignment.domain.model.anime_details.AnimeDetail
+import com.example.seekhoappassignment.domain.model.anime_details.AnimeDetailResponse
 import com.example.seekhoappassignment.domain.model.anime_list.Data
 import com.example.seekhoappassignment.domain.repository.AnimeRepository
 import javax.inject.Inject
@@ -17,7 +19,7 @@ class AnimeRepositoryImpl @Inject constructor(private val api: AnimeApiService) 
         )
     }
 
-    override fun getAnimeDetails(): Data {
-        TODO("Not yet implemented")
+    override suspend fun getAnimeDetails(animeId: String): AnimeDetail? {
+        return api.getAnimeDetail(animeId).data
     }
 }
