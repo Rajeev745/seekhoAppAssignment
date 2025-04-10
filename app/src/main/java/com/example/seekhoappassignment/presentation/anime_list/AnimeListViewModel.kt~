@@ -1,0 +1,47 @@
+package com.example.seekhoappassignment.presentation.anime_list
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.example.seekhoappassignment.domain.model.anime_list.Data
+import com.example.seekhoappassignment.domain.repository.AnimeRepository
+import com.example.seekhoappassignment.utils.UiState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class AnimeListViewModel @Inject constructor(
+    private val repository: AnimeRepository,
+) : ViewModel() {
+
+    companion object {
+        const val TAG = "AnimeListViewModel"
+    }
+
+    private val _uiState = MutableStateFlow<UiState<PagingData<Data>>>(UiState.Loading)
+    val uiState: StateFlow<UiState<PagingData<Data>>> = _uiState
+
+    init {
+        getAnimeList()
+    }
+
+    private fun getAnimeList() {
+        viewModelScope.launch {
+            repository.getAnimeList()
+                .flow
+                .cachedIn(viewModelScope)
+                .catch { e ->
+                    _uiState.value = UiState.Error(e.message ?: "Unknown error")
+                }
+                .collectLatest { pagingData ->
+                    _uiState.value = UiState.Success(pagingData)
+                }
+        }
+    }
+}

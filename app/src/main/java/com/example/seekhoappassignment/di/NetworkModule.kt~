@@ -1,0 +1,4 @@
+package com.example.seekhoappassignment.di
+
+class NetworkModule {
+}
